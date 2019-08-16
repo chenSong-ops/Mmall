@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.company.dao.EmpDao">
+    <sql id="empColumn">empno,ename,job,mgr,sal,comm,hiredate,deptno</sql>
+    <update id="empUpdate" parameterType="com.company.dao.pojo.Emp">
+        update t_emp
+        <set>
+        <if test="ename!=null" >
+            ename=#{ename},
+        </if>
+        <if test="job!=null" >
+            job=#{job},
+        </if>
+        <if test="sal!=null" >
+            sal=#{sal}
+        </if>
+        </set>
+        where empno=#{empno}
+    </update>
+    <select id="EmpFind" resultType="com.company.dao.pojo.Emp">
+        select <include refid="empColumn" ></include> from t_emp
+        <trim prefix="where" prefixOverrides="and|or">
+            <if test="empno!=0">
+                empno=#{empno}
+            </if>
+            <if test="ename!=null">
+                and ename=#{ename}
+            </if>
+    </trim>
+    </select>
+    <select id="findByDept" resultType="com.company.dao.pojo.Emp">
+        select <include refid="empColumn"></include> from t_emp where deptno in
+        <foreach collection="list" index="index" open="(" close=")" separator="," item="deptno">
+            #{deptno}
+        </foreach>
+    </select>
+    <select id="findByDept2" resultType="com.company.dao.pojo.Emp">
+        select <include refid="empColumn"></include> from t_emp where deptno in
+        <foreach collection="array" index="index" open="(" close=")" separator="," item="deptno">
+            #{deptno}
+        </foreach>
+    </select>
+    <select id="findByCon" resultType="com.company.dao.pojo.Emp" parameterType="map">
+        select <include refid="empColumn"></include> from t_emp where 1=1
+        <choose>
+            <when test="empno!=null">
+                and empno=#{empno}
+            </when>
+            <when test="ename!=null">
+                and ename=#{ename}
+            </when>
+           <otherwise>
+               and sal>6000
+           </otherwise>
+        </choose>
+    </select>
+
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.company.dao.ReportDao">
+    <resultMap id="BOresultMap" type="com.company.dao.pojo.InfoBO">
+        <result property="emp.empno" column="empno" jdbcType="INTEGER"></result>
+        <result property="emp.ename" column="ename" jdbcType="VARCHAR"></result>
+        <result property="emp.hiredate" column="hiredate" jdbcType="DATE"></result>
+        <result property="emp.deptno" column="deptno" jdbcType="INTEGER"></result>
+        <result property="dept.deptno" column="deptno" jdbcType="INTEGER"></result>
+        <result property="dept.dname" column="dname" jdbcType="VARCHAR"></result>
+        <result property="dept.loc" column="loc" jdbcType="VARCHAR"></result>
+    </resultMap>
+    <select id="findBoth" resultType="com.company.dao.pojo.enameDnameDTO">
+        select e.ename,d.dname,d.deptno from t_emp e left join t_dept d on e.deptno=d.deptno
+    </select>
+    <select id="findInfoBO" parameterType="com.company.dao.pojo.DateVO" resultMap="BOresultMap">
+        select e.empno,e.ename,e.hiredate,e.deptno  ,d.deptno ,d.dname,d.loc from t_emp e left join t_dept d on e.deptno=d.deptno where e.hiredate between #{begin} and #{end}
+    </select>
+</mapper>
